@@ -44,34 +44,39 @@ local function define_items(self)
     local citem = vRP.EXT.Inventory:computeItem(fullid)
     local edible = self.edibles[citem.args[2]]
     local etype = self.types[edible.type]
+    local in_coma = vRP.EXT.Survival.remote.isInComa(user.source)
 
     -- consume
-    if user:tryTakeItem(fullid, 1, true) then -- available check
-      if user.edible_action:perform(self.cfg.action_delay) then
-        user:tryTakeItem(fullid, 1, nil, true) -- consume
+    if not in_coma or user:hasPermission(self.cfg.in_coma_perm) then
+      if user:tryTakeItem(fullid, 1, true) then -- available check
+        if user.edible_action:perform(self.cfg.action_delay) then
+          user:tryTakeItem(fullid, 1, nil, true) -- consume
 
-        -- menu update
-        local namount = user:getItemAmount(fullid)
-        if namount > 0 then
-          user:actualizeMenu()
-        else
-          user:closeMenu(menu)
-        end
-
-        -- on_consume
-        etype[2](user, edible)
-
-        -- effects
-        for id, value in pairs(edible.effects) do
-          local effect = self.effects[id]
-          if effect then
-            -- on_effect
-            effect(user, value)
+          -- menu update
+          local namount = user:getItemAmount(fullid)
+          if namount > 0 then
+            user:actualizeMenu()
+          else
+            user:closeMenu(menu)
           end
+
+          -- on_consume
+          etype[2](user, edible)
+
+          -- effects
+          for id, value in pairs(edible.effects) do
+            local effect = self.effects[id]
+            if effect then
+              -- on_effect
+              effect(user, value)
+            end
+          end
+        else
+          vRP.EXT.Base.remote._notify(user.source, lang.common.must_wait({user.edible_action:remaining()}))
         end
-      else
-        vRP.EXT.Base.remote._notify(user.source, lang.common.must_wait({user.edible_action:remaining()}))
       end
+    else
+      vRP.EXT.Base.remote._notify(user.source, lang.common.not_in_coma())
     end
   end
 

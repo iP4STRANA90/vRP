@@ -1,10 +1,12 @@
 
 local cfg = {}
 
+cfg.in_coma_perm = "admin.bypass" -- permission to perform action without waiting for medical assistance
 cfg.action_delay = 5 -- seconds, delay between two edible consume actions
 
 cfg.solid_sound = "sounds/eating.ogg"
 cfg.liquid_sound = "sounds/drinking.ogg"
+
 
 -- (see vRP.EXT.Edible:defineEdible)
 -- map of id => {type, effects, name, description, weight}

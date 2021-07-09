@@ -150,37 +150,43 @@ local function menu_inventory_item(self)
     local user = menu.user
     local fullid = menu.data.fullid
     local citem = self:computeItem(fullid)
+    local in_coma = vRP.EXT.Survival.remote.isInComa(user.source)
 
-    -- get nearest player
-    local nuser
-    local nplayer = vRP.EXT.Base.remote.getNearestPlayer(user.source, 10)
-    if nplayer then nuser = vRP.users_by_source[nplayer] end
+    if not in_coma then
 
-    if nuser then
-      -- prompt number
-      local amount = parseInt(user:prompt(lang.inventory.give.prompt({user:getItemAmount(fullid)}),""))
+      -- get nearest player
+      local nuser
+      local nplayer = vRP.EXT.Base.remote.getNearestPlayer(user.source, 10)
+      if nplayer then nuser = vRP.users_by_source[nplayer] end
 
-      if nuser:tryGiveItem(fullid,amount,true) then
-        if user:tryTakeItem(fullid,amount,true) then
-          user:tryTakeItem(fullid, amount)
-          nuser:tryGiveItem(fullid, amount)
+      if nuser then
+        -- prompt number
+        local amount = parseInt(user:prompt(lang.inventory.give.prompt({user:getItemAmount(fullid)}),""))
 
-          if user:getItemAmount(fullid) > 0 then
-            user:actualizeMenu()
+        if nuser:tryGiveItem(fullid,amount,true) then
+          if user:tryTakeItem(fullid,amount,true) then
+            user:tryTakeItem(fullid, amount)
+            nuser:tryGiveItem(fullid, amount)
+
+            if user:getItemAmount(fullid) > 0 then
+              user:actualizeMenu()
+            else
+              user:closeMenu(menu)
+            end
+
+            vRP.EXT.Base.remote._playAnim(user.source,true,{{"mp_common","givetake1_a",1}},false)
+            vRP.EXT.Base.remote._playAnim(nuser.source,true,{{"mp_common","givetake2_a",1}},false)
           else
-            user:closeMenu(menu)
+            vRP.EXT.Base.remote._notify(user.source,lang.common.invalid_value())
           end
-
-          vRP.EXT.Base.remote._playAnim(user.source,true,{{"mp_common","givetake1_a",1}},false)
-          vRP.EXT.Base.remote._playAnim(nuser.source,true,{{"mp_common","givetake2_a",1}},false)
         else
-          vRP.EXT.Base.remote._notify(user.source,lang.common.invalid_value())
+          vRP.EXT.Base.remote._notify(user.source,lang.inventory.full())
         end
       else
-        vRP.EXT.Base.remote._notify(user.source,lang.inventory.full())
+        vRP.EXT.Base.remote._notify(user.source,lang.common.no_player_near())
       end
     else
-      vRP.EXT.Base.remote._notify(user.source,lang.common.no_player_near())
+      vRP.EXT.Base.remote._notify(user.source, lang.common.not_in_coma())
     end
   end
 
@@ -189,20 +195,26 @@ local function menu_inventory_item(self)
     local user = menu.user
     local fullid = menu.data.fullid
     local citem = self:computeItem(fullid)
+    local in_coma = vRP.EXT.Survival.remote.isInComa(user.source)
 
-    -- prompt number
-    local amount = parseInt(user:prompt(lang.inventory.trash.prompt({user:getItemAmount(fullid)}),""))
-    if user:tryTakeItem(fullid,amount,nil,true) then
-      if user:getItemAmount(fullid) > 0 then
-        user:actualizeMenu()
+    if not in_coma then
+
+      -- prompt number
+      local amount = parseInt(user:prompt(lang.inventory.trash.prompt({user:getItemAmount(fullid)}),""))
+      if user:tryTakeItem(fullid,amount,nil,true) then
+        if user:getItemAmount(fullid) > 0 then
+          user:actualizeMenu()
+        else
+          user:closeMenu(menu)
+        end
+
+        vRP.EXT.Base.remote._notify(user.source,lang.inventory.trash.done({citem.name,amount}))
+        vRP.EXT.Base.remote._playAnim(user.source,true,{{"pickup_object","pickup_low",1}},false)
       else
-        user:closeMenu(menu)
+        vRP.EXT.Base.remote._notify(user.source,lang.common.invalid_value())
       end
-
-      vRP.EXT.Base.remote._notify(user.source,lang.inventory.trash.done({citem.name,amount}))
-      vRP.EXT.Base.remote._playAnim(user.source,true,{{"pickup_object","pickup_low",1}},false)
     else
-      vRP.EXT.Base.remote._notify(user.source,lang.common.invalid_value())
+      vRP.EXT.Base.remote._notify(user.source, lang.common.not_in_coma())
     end
   end
 

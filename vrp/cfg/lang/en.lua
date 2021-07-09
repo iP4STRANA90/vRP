@@ -12,6 +12,7 @@ local lang = {
     wearing_uniform = "~r~Be careful, you are wearing a uniform.",
     not_allowed = "~r~Not allowed.",
     must_wait = "~r~Must wait {1} seconds before being able to perform this action.",
+    not_in_coma = "~r~Unable to perform actions while in a coma, Call 911!",
     menu = {
       title = "Menu"
     }
@@ -334,7 +335,7 @@ local lang = {
     title = "Identity",
     citizenship = {
       title = "Citizenship",
-      info = "<em>Name: </em>{1}<br /><em>First name: </em>{2}<br /><em>Age: </em>{3}<br /><em>Registration n°: </em>{4}<br /><em>Phone: </em>{5}",
+      info = "<em>Name: </em>{2}<br /><em>First name: </em>{1}<br /><em>Age: </em>{3}<br /><em>Registration n°: </em>{4}<br /><em>Phone: </em>{5}",
     },
     cityhall = {
       title = "City Hall",

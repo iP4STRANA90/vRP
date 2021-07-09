@@ -49,6 +49,7 @@ cfg.groups = {
   ["admin"] = {
     "admin.tickets",
     "admin.announce",
+    "admin.bypass",
     "player.list",
     "player.whitelist",
     "player.unwhitelist",
