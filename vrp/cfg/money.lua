@@ -11,6 +11,21 @@ cfg.money_display = true
 
 -- money display css
 cfg.display_css = [[
+.div_bmoney{
+  position: absolute;
+  top: 70px;
+  right: 20px;
+  font-size: 1.3em;
+  font-weight: bold;
+  color: white;
+  text-shadow: 3px 3px 2px rgba(0, 0, 0, 0.80);
+}
+
+.div_bmoney .symbol{
+  font-size: 1.4em;
+  color: #00ac51; 
+}
+
 .div_money{
   position: absolute;
   top: 100px;

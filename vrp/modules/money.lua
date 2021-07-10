@@ -283,6 +283,7 @@ end
 function Money.event:playerSpawn(user, first_spawn)
   -- add money display
   if self.cfg.money_display and first_spawn then
+    vRP.EXT.GUI.remote._setDiv(user.source,"bmoney",self.cfg.display_css,lang.money.display({user:getBank()}))
     vRP.EXT.GUI.remote._setDiv(user.source,"money",self.cfg.display_css,lang.money.display({user:getWallet()}))
   end
 end
@@ -296,6 +297,7 @@ end
 function Money.event:playerMoneyUpdate(user)
   if self.cfg.money_display then
     -- update money
+    vRP.EXT.GUI.remote._setDivContent(user.source,"bmoney",lang.money.display({user:getBank()}))
     vRP.EXT.GUI.remote._setDivContent(user.source,"money",lang.money.display({user:getWallet()}))
   end
 end
